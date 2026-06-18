@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 // =====================
 // RAPIDAPI CREDENTIALS
 // =====================
+// ✅ এখন এটি Render-এর Environment Variable থেকে আপনার বসানো API Key রিড করতে পারবে
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || 'bf2de52a0bmsh7f39bca2349bd1cp1597f8jsn38011c7455f5';
 
 const HOSTS = {
@@ -55,7 +56,7 @@ app.get('/', (req, res) => {
 async function downloadYouTube(videoId) {
     const options = {
         method: 'GET',
-        url: https://${HOSTS.youtube}/dl?id=${videoId}, // ✅ এখানে ব্যাকটিক (``) দিয়ে ফিক্স করা হয়েছে
+        url: https://${HOSTS.youtube}/dl?id=${videoId},
         headers: {
             'X-RapidAPI-Key': RAPIDAPI_KEY,
             'X-RapidAPI-Host': HOSTS.youtube
@@ -191,7 +192,10 @@ app.post('/api/download', async (req, res) => {
     const platform = detectPlatform(url);
 
     if (!platform) {
-        return res.json({ success: false, error: 'Only YouTube, Instagram, TikTok, and Facebook links are supported.' });
+        return res.json({
+            success: false,
+            error: 'Only YouTube, Instagram, TikTok, and Facebook links are supported.'
+        });
     }
 
     try {
