@@ -1,117 +1,146 @@
 function initClipSavePro() {
     const downloadBtn = document.getElementById('downloadBtn');
-    const urlInput = document.getElementById('urlInput');
-    const loader = document.getElementById('loader');
-    const resultDiv = document.getElementById('result');
-    const errorDiv = document.getElementById('error');
+    const urlInput    = document.getElementById('urlInput');
+    const loader      = document.getElementById('loader');
+    const resultDiv   = document.getElementById('result');
+    const errorDiv    = document.getElementById('error');
 
-    // Tab click handler
+    // Guard: abort if critical elements are missing
+    if (!downloadBtn || !urlInput || !loader || !resultDiv || !errorDiv) return;
+
+    // =====================
+    // TAB CLICK HANDLER
+    // =====================
     document.addEventListener('click', function (e) {
         if (e.target && e.target.classList.contains('tab-btn')) {
             e.preventDefault();
             document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
             e.target.classList.add('active');
-            resultDiv.style.display = 'none';
-            errorDiv.style.display = 'none';
-            resultDiv.innerHTML = '';
-            errorDiv.innerHTML = '';
+            clearUI();
         }
     });
 
-    if (!downloadBtn || !urlInput) return;
+    // =====================
+    // HELPERS
+    // =====================
+    function clearUI() {
+        resultDiv.style.display = 'none';
+        errorDiv.style.display  = 'none';
+        resultDiv.innerHTML = '';
+        errorDiv.innerHTML  = '';
+    }
 
+    function showLoader(on) {
+        loader.style.display    = on ? 'block' : 'none';
+        downloadBtn.disabled    = on;
+        downloadBtn.textContent = on ? 'Processing...' : 'Download Video';
+    }
+
+    function showError(msg) {
+        // textContent prevents any HTML in msg from being rendered
+        const div = document.createElement('div');
+        div.style.color = '#ff6666';
+        div.textContent = msg;
+        errorDiv.innerHTML = '';
+        errorDiv.appendChild(div);
+        errorDiv.style.display = 'block';
+    }
+
+    function showResult(data) {
+        const platformEmoji = { youtube: '🎬', instagram: '📸', tiktok: '🎵', facebook: '📘' };
+        const emoji = platformEmoji[data.platform] || '🎬';
+
+        // Build DOM nodes instead of innerHTML to avoid XSS
+        resultDiv.innerHTML = '';
+
+        const status = document.createElement('p');
+        status.style.cssText = 'margin-bottom:12px;font-weight:bold;color:#28a745;font-size:1.1rem;';
+        status.textContent = emoji + ' Video is ready!';
+
+        const titleEl = document.createElement('p');
+        titleEl.style.cssText = 'color:#ccc;margin-bottom:16px;font-size:0.9rem;';
+        titleEl.textContent = data.title || '';
+
+        const link = document.createElement('a');
+        link.href   = data.downloadUrl;
+        link.target = '_blank';
+        link.rel    = 'noopener noreferrer';
+        link.style.cssText = [
+            'display:inline-block', 'background:#28a745', 'color:#fff',
+            'text-decoration:none', 'padding:14px 28px', 'border-radius:10px',
+            'font-weight:bold', 'font-size:1rem',
+            'box-shadow:0 4px 15px rgba(40,167,69,0.3)'
+        ].join(';');
+        link.textContent = '⬇️ Download Video';
+
+        resultDiv.appendChild(status);
+        resultDiv.appendChild(titleEl);
+        resultDiv.appendChild(link);
+        resultDiv.style.display = 'block';
+    }
+
+    // =====================
+    // MAIN DOWNLOAD HANDLER
+    // =====================
     const handleDownload = async function (e) {
         if (e) e.preventDefault();
-        const videoUrl = urlInput.value.trim();
 
-        resultDiv.style.display = 'none';
-        errorDiv.style.display = 'none';
-        resultDiv.innerHTML = '';
-        errorDiv.innerHTML = '';
+        const videoUrl = urlInput.value.trim();
+        clearUI();
 
         if (!videoUrl) {
-            showError('একটি ভিডিও লিংক দিন!');
+            showError('Please paste a video link first.');
             return;
         }
 
-        // Platform check
-        const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
-        const isInstagram = videoUrl.includes('instagram.com');
-        const isTikTok = videoUrl.includes('tiktok.com');
-        const isFacebook = videoUrl.includes('facebook.com') || videoUrl.includes('fb.watch');
-
-        if (!isYouTube && !isInstagram && !isTikTok && !isFacebook) {
-            showError('শুধু YouTube, Instagram, TikTok এবং Facebook লিংক সাপোর্ট করে।');
-            return;
-        }
-
-        // Show loader
-        loader.style.display = 'block';
-        downloadBtn.disabled = true;
-        downloadBtn.innerText = 'Processing...';
+        showLoader(true);
 
         try {
-            // ✅ আমাদের নিজের server এ request পাঠাচ্ছি
             const response = await fetch('/api/download', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: videoUrl })
             });
 
+            // Handle non-2xx HTTP responses (e.g. 500 from server crash)
+            if (!response.ok) {
+                throw new Error('Server returned status ' + response.status);
+            }
+
             const data = await response.json();
-            loader.style.display = 'none';
 
             if (data.success && data.downloadUrl) {
-                const platformEmoji = {
-                    youtube: '🎬',
-                    instagram: '📸',
-                    tiktok: '🎵',
-                    facebook: '📘'
-                };
-                const emoji = platformEmoji[data.platform] || '🎬';
-
-                resultDiv.innerHTML = `
-                    <p style="margin-bottom: 12px; font-weight: bold; color: #28a745; font-size: 1.1rem;">
-                        ${emoji} ভিডিও রেডি!
-                    </p>
-                    <p style="color: #ccc; margin-bottom: 16px; font-size: 0.9rem;">${data.title}</p>
-                    <a href="${data.downloadUrl}" target="_blank" rel="noopener noreferrer"
-                        style="display: inline-block; background: #28a745; color: white;
-                        text-decoration: none; padding: 14px 28px; border-radius: 10px;
-                        font-weight: bold; font-size: 1rem;
-                        box-shadow: 0 4px 15px rgba(40,167,69,0.3);">
-                        ⬇️ ভিডিও ডাউনলোড করুন
-                    </a>
-                `;
-                resultDiv.style.display = 'block';
+                showResult(data);
             } else {
-                showError(data.error || 'ভিডিও পাওয়া যায়নি। আবার চেষ্টা করুন।');
+                showError(data.error || 'Video not found. Please check the link and try again.');
             }
 
         } catch (err) {
             console.error('Fetch error:', err);
-            loader.style.display = 'none';
-            showError('Server এর সাথে সংযোগ হয়নি। আবার চেষ্টা করুন।');
+            showError('Could not connect to the server. Please try again.');
         } finally {
-            loader.style.display = 'none';
-            downloadBtn.disabled = false;
-            downloadBtn.innerText = 'Download Video';
+            // Always runs — resets button and hides loader whether success or error
+            showLoader(false);
         }
     };
 
-    function showError(msg) {
-        errorDiv.innerHTML = `<div style="color: #ff6666;">${msg}</div>`;
-        errorDiv.style.display = 'block';
-    }
+    // =====================
+    // EVENT LISTENERS
+    // =====================
+    downloadBtn.addEventListener('click', handleDownload);
 
-    downloadBtn.onclick = handleDownload;
-    urlInput.onkeypress = function (e) {
+    // keydown replaces deprecated onkeypress
+    urlInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') handleDownload(e);
-    };
+    });
 }
 
+// =====================
+// INIT
+// =====================
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initClipSavePro);
 } else {
     initClipSavePro();
 }
+
