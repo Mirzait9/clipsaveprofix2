@@ -8,8 +8,9 @@ const PORT = process.env.PORT || 3000;
 
 // =====================
 // RAPIDAPI CREDENTIALS
+// Reads from environment variable if set (recommended for production),
+// falls back to the hardcoded key for local development.
 // =====================
-// ✅ এখন এটি Render-এর Environment Variable থেকে আপনার বসানো API Key রিড করতে পারবে
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || 'bf2de52a0bmsh7f39bca2349bd1cp1597f8jsn38011c7455f5';
 
 const HOSTS = {
@@ -56,7 +57,7 @@ app.get('/', (req, res) => {
 async function downloadYouTube(videoId) {
     const options = {
         method: 'GET',
-        url: https://${HOSTS.youtube}/dl?id=${videoId},
+        url: `https://${HOSTS.youtube}/dl?id=${videoId}`,
         headers: {
             'X-RapidAPI-Key': RAPIDAPI_KEY,
             'X-RapidAPI-Host': HOSTS.youtube
@@ -80,6 +81,7 @@ async function downloadYouTube(videoId) {
         }
     }
 
+    // Fallback: formats array
     if (!downloadUrl && data.formats && data.formats.length > 0) {
         const fmt = data.formats.find(f => f.url);
         if (fmt) downloadUrl = fmt.url;
@@ -94,7 +96,7 @@ async function downloadYouTube(videoId) {
 async function downloadInstagram(url) {
     const options = {
         method: 'GET',
-        url: https://${HOSTS.instagram}/index,
+        url: `https://${HOSTS.instagram}/index`,
         params: { url: url },
         headers: {
             'X-RapidAPI-Key': RAPIDAPI_KEY,
@@ -125,7 +127,7 @@ async function downloadInstagram(url) {
 async function downloadTikTok(url) {
     const options = {
         method: 'GET',
-        url: https://${HOSTS.tiktok}/vid/index,
+        url: `https://${HOSTS.tiktok}/vid/index`,
         params: { url: url },
         headers: {
             'X-RapidAPI-Key': RAPIDAPI_KEY,
@@ -154,7 +156,7 @@ async function downloadTikTok(url) {
 async function downloadFacebook(url) {
     const options = {
         method: 'GET',
-        url: https://${HOSTS.facebook}/fb,
+        url: `https://${HOSTS.facebook}/fb`,
         params: { url: url },
         headers: {
             'X-RapidAPI-Key': RAPIDAPI_KEY,
@@ -230,7 +232,7 @@ app.post('/api/download', async (req, res) => {
         }
 
     } catch (error) {
-        console.error([${platform.toUpperCase()}] Error:, error.message);
+        console.error(`[${platform.toUpperCase()}] Error:`, error.message);
 
         if (error.response && error.response.status === 403) {
             return res.json({ success: false, error: 'API key error. Please check your RapidAPI credentials.' });
@@ -254,5 +256,5 @@ app.get('*', (req, res) => {
 // START SERVER
 // =====================
 app.listen(PORT, () => {
-    console.log(ClipSavePro is running on port ${PORT});
+    console.log(`ClipSavePro is running on port ${PORT}`);
 });
