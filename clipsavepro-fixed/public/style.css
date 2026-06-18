@@ -1,0 +1,269 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0a0a0a;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+.navbar {
+    background: #111111;
+    border-bottom: 1px solid #333;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.logo:hover { color: #ccc; }
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #aaa;
+    transition: color 0.3s;
+}
+
+.nav-menu a:hover { color: white; }
+
+.hero {
+    text-align: center;
+    padding: 160px 20px 60px;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.hero h1 { font-size: 4rem; color: white; margin-bottom: 1rem; }
+.hero p { font-size: 1.3rem; color: #888; margin-bottom: 2rem; }
+
+.platform-badges {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.downloader-section {
+    padding: 40px 20px;
+    background: #0a0a0a;
+}
+
+.container { max-width: 800px; margin: 0 auto; }
+
+.downloader-card {
+    background: #111111;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.platform-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tab-btn {
+    padding: 0.6rem 1.2rem;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #aaa;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover { border-color: #666; color: white; background: #222; }
+.tab-btn.active { background: white; color: black; border-color: white; }
+
+.input-wrapper {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.input-wrapper input {
+    flex: 1;
+    padding: 1rem;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: white;
+}
+
+.input-wrapper input:focus { outline: none; border-color: #888; }
+.input-wrapper input::placeholder { color: #555; }
+
+.input-wrapper button {
+    padding: 1rem 2rem;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.input-wrapper button:hover { background: #ddd; }
+.input-wrapper button:disabled { background: #444; color: #888; cursor: not-allowed; }
+
+.loader { text-align: center; padding: 20px; }
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #333;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.result {
+    margin-top: 20px;
+    padding: 20px;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.error {
+    margin-top: 20px;
+    padding: 15px;
+    background: #1a0000;
+    border: 1px solid #550000;
+    border-radius: 10px;
+    text-align: center;
+    color: #ff6666;
+}
+
+.features, .how-it-works, .supported-sites, .faq {
+    padding: 80px 20px;
+    background: #0a0a0a;
+}
+
+.how-it-works, .faq { background: #050505; }
+
+.features h2, .how-it-works h2, .supported-sites h2, .faq h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.features-grid, .steps, .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.sites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.feature, .step, .site, .faq-item {
+    background: #111111;
+    border: 1px solid #333;
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+.feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+.feature h3, .step h3, .faq-item h3 { color: white; margin-bottom: 0.5rem; }
+
+.site { text-align: center; padding: 1rem; border-radius: 10px; }
+
+.step-num {
+    width: 70px;
+    height: 70px;
+    background: white;
+    color: black;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+footer {
+    background: #050505;
+    color: #aaa;
+    padding: 3rem 20px 1rem;
+    border-top: 1px solid #1a1a1a;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.footer-section h3 { color: white; margin-bottom: 1rem; }
+.footer-section ul { list-style: none; }
+.footer-section ul li { margin-bottom: 0.5rem; }
+.footer-section a { color: #aaa; text-decoration: none; }
+.footer-section a:hover { color: white; }
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #1a1a1a;
+}
+
+.disclaimer { margin-top: 0.5rem; font-size: 0.85rem; color: #666; }
+
+@media (max-width: 768px) {
+    .hero h1 { font-size: 2.5rem; }
+    .input-wrapper { flex-direction: column; }
+    .nav-menu { display: none; }
+    .features-grid, .faq-grid { grid-template-columns: 1fr; }
+    .downloader-card { padding: 20px; }
+}
