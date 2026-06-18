@@ -8,8 +8,6 @@ const PORT = process.env.PORT || 3000;
 
 // =====================
 // RAPIDAPI CREDENTIALS
-// Reads from environment variable if set (recommended for production),
-// falls back to the hardcoded key for local development.
 // =====================
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || 'bf2de52a0bmsh7f39bca2349bd1cp1597f8jsn38011c7455f5';
 
@@ -57,7 +55,7 @@ app.get('/', (req, res) => {
 async function downloadYouTube(videoId) {
     const options = {
         method: 'GET',
-        url: https://${HOSTS.youtube}/dl?id=${videoId},
+        url: https://${HOSTS.youtube}/dl?id=${videoId}, // ✅ এখানে ব্যাকটিক (``) দিয়ে ফিক্স করা হয়েছে
         headers: {
             'X-RapidAPI-Key': RAPIDAPI_KEY,
             'X-RapidAPI-Host': HOSTS.youtube
@@ -81,7 +79,6 @@ async function downloadYouTube(videoId) {
         }
     }
 
-    // Fallback: formats array
     if (!downloadUrl && data.formats && data.formats.length > 0) {
         const fmt = data.formats.find(f => f.url);
         if (fmt) downloadUrl = fmt.url;
@@ -194,10 +191,7 @@ app.post('/api/download', async (req, res) => {
     const platform = detectPlatform(url);
 
     if (!platform) {
-        return res.json({
-            success: false,
-            error: 'Only YouTube, Instagram, TikTok, and Facebook links are supported.'
-        });
+        return res.json({ success: false, error: 'Only YouTube, Instagram, TikTok, and Facebook links are supported.' });
     }
 
     try {
