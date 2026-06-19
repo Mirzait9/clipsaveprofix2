@@ -9,7 +9,6 @@
     <meta name="robots" content="index, follow">
     <meta name="author" content="ClipSavePro">
     <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
-    
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -25,9 +24,8 @@
             </ul>
         </div>
     </nav>
-
     <main>
-        <div class="ad-container top-ad">
+        <div class="ad-container top-ad" style="display: none;">
             <div class="ad-label">Advertisement</div>
             <div class="ad-space" id="topAdSpace">
                 <div class="ad-placeholder">728x90 Ad Space</div>
@@ -58,7 +56,6 @@
                         <button class="tab-btn" data-platform="instagram">Instagram</button>
                         <button class="tab-btn" data-platform="tiktok">TikTok</button>
                     </div>
-
                     <div class="input-wrapper">
                         <input type="text" id="urlInput" placeholder="Paste video link here...">
                         <button id="downloadBtn">Download Video</button>
@@ -76,14 +73,13 @@
                         <div class="spinner"></div>
                         <p>Processing your video...</p>
                     </div>
-
                     <div id="result" class="result" style="display:none;"></div>
                     <div id="error" class="error" style="display:none;"></div>
                 </div>
             </div>
         </section>
 
-        <div class="sidebar-ad">
+        <div class="sidebar-ad" style="display: none;">
             <div class="ad-label">Advertisement</div>
             <div class="ad-space" id="sidebarAdSpace">
                 <div class="ad-placeholder">300x250 Ad Space</div>
@@ -202,7 +198,7 @@
         </section>
     </main>
 
-    <div class="ad-container footer-ad">
+    <div class="ad-container footer-ad" style="display: none;">
         <div class="ad-label">Advertisement</div>
         <div class="ad-space" id="footerAdSpace">
             <div class="ad-placeholder">728x90 Ad Space</div>
@@ -247,7 +243,6 @@
             </div>
         </div>
     </footer>
-
     <script src="/script.js"></script>
 </body>
 </html>
